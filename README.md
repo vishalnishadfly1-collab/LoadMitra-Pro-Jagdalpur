@@ -1,1 +1,0 @@
-# LoadMitra-Pro-Jagdalpur
