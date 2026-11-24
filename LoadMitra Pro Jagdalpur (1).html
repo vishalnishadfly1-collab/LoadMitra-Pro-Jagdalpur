@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="hi" class="h-full bg-slate-950 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>LoadMitra Pro — Jagdalpur & Bastar Transport Network</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                        },
+                        bastar: {
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & FontAwesome CDN -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- QRCode JS CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .tab-active { color: #10b981; border-top: 3px solid #10b981; background: rgba(16, 185, 129, 0.08); }
+        .glass-card { background: rgba(30, 41, 59, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .chip-selected { background-color: #059669 !important; color: #ffffff !important; border-color: #10b981 !important; }
+    </style>
+</head>
+<body class="h-full flex flex-col justify-between max-w-md mx-auto min-h-screen bg-slate-950 text-slate-100 shadow-2xl relative pb-20">
+
+    <!-- TOAST NOTIFICATION BANNER -->
+    <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 transform -translate-y-12 opacity-0 pointer-events-none w-11/12 max-w-sm">
+        <div class="bg-emerald-600 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center justify-between text-xs font-bold border border-emerald-400">
+            <span id="toast-message" class="flex items-center gap-2">
+                <i class="fa-solid fa-circle-check text-sm"></i> <span>Message</span>
+            </span>
+            <button onclick="hideToast()" class="text-white opacity-80 hover:opacity-100 p-1"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+    </div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div class="flex-1 flex flex-col w-full">
+
+        <!-- STICKY TOP HEADER WITH BASTAR BRANDING -->
+        <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur border-b border-slate-800 px-3 py-2.5 shadow-md">
+            <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 via-amber-500 to-orange-600 flex items-center justify-center text-white shadow-lg font-black text-xl">
+                        <i class="fa-solid fa-truck-fast"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-1.5">
+                            <h1 class="font-black text-base tracking-tight text-white leading-tight">LoadMitra <span class="text-emerald-400">Pro</span></h1>
+                            <span class="bg-emerald-500/20 text-emerald-400 text-[9px] font-black px-1.5 py-0.5 rounded uppercase border border-emerald-500/30">Jagdalpur</span>
+                        </div>
+                        <p class="text-[10px] text-amber-400 font-semibold tracking-wide">Jagdalpur • Bastar Transport Network</p>
+                    </div>
+                </div>
+
+                <!-- FAST CONTACT HELPLINE BUTTONS -->
+                <div class="flex items-center gap-1.5">
+                    <a id="hdr-call-btn" href="tel:+918601129427" class="bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 p-2 rounded-xl flex items-center gap-1 text-xs font-bold transition">
+                        <i class="fa-solid fa-phone text-emerald-400"></i>
+                        <span class="hidden sm:inline">Call</span>
+                    </a>
+                    <a id="hdr-wa-btn" href="https://wa.me/918601129427?text=Namaste%20LoadMitra%20Jagdalpur!%20Mujhe%20load%20ya%20truck%20ki%20jaankari%20chahiye." target="_blank" class="bg-green-600 hover:bg-green-500 text-white p-2 rounded-xl flex items-center gap-1 text-xs font-bold shadow-md transition">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- KPI SUMMARY STRIP -->
+            <div class="grid grid-cols-3 gap-1.5 mt-2.5 pt-2 border-t border-slate-800">
+                <div class="bg-slate-800/80 p-2 rounded-xl border border-slate-700/60 text-center">
+                    <span class="text-[9px] text-slate-400 font-semibold uppercase block">Active Loads</span>
+                    <span id="kpi-loads-count" class="text-xs font-black text-amber-400">0</span>
+                </div>
+                <div class="bg-slate-800/80 p-2 rounded-xl border border-slate-700/60 text-center">
+                    <span class="text-[9px] text-slate-400 font-semibold uppercase block">Khali Trucks</span>
+                    <span id="kpi-trucks-count" class="text-xs font-black text-emerald-400">0</span>
+                </div>
+                <div class="bg-slate-800/80 p-2 rounded-xl border border-slate-700/60 text-center cursor-pointer relative" onclick="switchTab('payment')">
+                    <span class="text-[9px] text-slate-400 font-semibold uppercase block">Earned Commission</span>
+                    <span id="kpi-earned-sum" class="text-xs font-black text-white">₹0</span>
+                    <span class="absolute -top-1 -right-1 bg-emerald-500 text-slate-950 text-[8px] font-black px-1 rounded-full">UPI</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN VIEW PORTIONS -->
+        <main class="flex-1 p-3 overflow-y-auto">
+
+            <!-- TAB 1: LIVE LOADS (MAAL) -->
+            <section id="view-loads" class="space-y-3">
+                <!-- Search & Quick Filter Pills -->
+                <div class="space-y-2">
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-500 text-xs"></i>
+                        <input type="text" id="load-search-input" onkeyup="renderLoads()" placeholder="Search route (e.g. Raipur, Nagarnar, Mandi)..." class="w-full bg-slate-900 border border-slate-800 rounded-xl pl-8 pr-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500 placeholder-slate-500">
+                    </div>
+                    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+                        <button onclick="filterLoads('all', this)" class="load-filter-pill chip-selected bg-emerald-600 text-white text-[11px] font-bold px-3 py-1 rounded-full whitespace-nowrap shadow-sm border border-emerald-500">All Loads</button>
+                        <button onclick="filterLoads('return', this)" class="load-filter-pill bg-slate-800 text-slate-300 text-[11px] font-medium px-3 py-1 rounded-full whitespace-nowrap border border-slate-700">🔄 Return Load</button>
+                        <button onclick="filterLoads('from-jagdalpur', this)" class="load-filter-pill bg-slate-800 text-slate-300 text-[11px] font-medium px-3 py-1 rounded-full whitespace-nowrap border border-slate-700">From Jagdalpur</button>
+                        <button onclick="filterLoads('to-jagdalpur', this)" class="load-filter-pill bg-slate-800 text-slate-300 text-[11px] font-medium px-3 py-1 rounded-full whitespace-nowrap border border-slate-700">To Jagdalpur</button>
+                    </div>
+                </div>
+
+                <!-- Load Cards List Container -->
+                <div id="loads-list-container" class="space-y-3">
+                    <!-- Loaded dynamically via JS -->
+                </div>
+            </section>
+
+            <!-- TAB 2: POST LOAD FORM VIEW -->
+            <section id="view-post" class="hidden space-y-3">
+                <div class="glass-card p-4 rounded-2xl border border-slate-800">
+                    <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-800">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-circle-plus text-amber-400 text-base"></i>
+                            <h2 class="font-black text-white text-sm">Post New Load (भाड़ा दर्ज करें)</h2>
+                        </div>
+                        <span class="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Bastar Desk</span>
+                    </div>
+
+                    <form id="post-load-form" onsubmit="handlePostLoad(event)" class="space-y-3">
+                        
+                        <!-- Route Selection with Chips -->
+                        <div class="space-y-2 bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                            <div class="flex items-center justify-between">
+                                <label class="text-xs font-bold text-amber-400 flex items-center gap-1">
+                                    <i class="fa-solid fa-route"></i> Select Pickup & Drop Route
+                                </label>
+                                <button type="button" onclick="swapRouteFields('post-pickup', 'post-drop')" class="text-[11px] text-slate-300 hover:text-white bg-slate-800 px-2 py-0.5 rounded-lg border border-slate-700 font-semibold flex items-center gap-1">
+                                    <i class="fa-solid fa-right-left"></i> Swap
+                                </button>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-[10px] text-slate-400 font-medium mb-1">Pickup (कहां से)*</label>
+                                    <input type="text" id="post-pickup" required placeholder="e.g. Jagdalpur" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white focus:outline-none focus:border-emerald-500 font-semibold">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] text-slate-400 font-medium mb-1">Drop (कहां तक)*</label>
+                                    <input type="text" id="post-drop" required placeholder="e.g. Raipur" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white focus:outline-none focus:border-emerald-500 font-semibold">
+                                </div>
+                            </div>
+
+                            <!-- One-Tap Route Chips -->
+                            <div>
+                                <span class="text-[10px] text-slate-400 font-semibold block mb-1">⚡ Quick Route Selector (Jagdalpur Corridor):</span>
+                                <div class="flex flex-wrap gap-1">
+                                    <button type="button" onclick="applyRouteChip('post-pickup', 'post-drop', 'Jagdalpur', 'Raipur')" class="bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white text-[10px] font-semibold px-2 py-1 rounded-lg border border-slate-700">Jagdalpur ➔ Raipur</button>
+                                    <button type="button" onclick="applyRouteChip('post-pickup', 'post-drop', 'Nagarnar (NMDC)', 'Bhilai')" class="bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white text-[10px] font-semibold px-2 py-1 rounded-lg border border-slate-700">Nagarnar ➔ Bhilai</button>
+                                    <button type="button" onclick="applyRouteChip('post-pickup', 'post-drop', 'Pandripani Mandi', 'Raipur')" class="bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white text-[10px] font-semibold px-2 py-1 rounded-lg border border-slate-700">Pandripani ➔ Raipur</button>
+                                    <button type="button" onclick="applyRouteChip('post-pickup', 'post-drop', 'Raipur', 'Jagdalpur')" class="bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white text-[10px] font-semibold px-2 py-1 rounded-lg border border-slate-700">Raipur ➔ Jagdalpur</button>
+                                    <button type="button" onclick="applyRouteChip('post-pickup', 'post-drop', 'Jagdalpur', 'Kirandul / Bacheli')" class="bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white text-[10px] font-semibold px-2 py-1 rounded-lg border border-slate-700">Jagdalpur ➔ Kirandul</button>
+                                    <button type="button" onclick="applyRouteChip('post-pickup', 'post-drop', 'Jagdalpur', 'Vizag / Jeypore')" class="bg-slate-800 hover:bg-emerald-600 text-slate-200 hover:text-white text-[10px] font-semibold px-2 py-1 rounded-lg border border-slate-700">Jagdalpur ➔ Vizag</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Material Type with Preset Chips -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-semibold text-slate-300">Material Type (माल का नाम)*</label>
+                            <input type="text" id="post-material" required placeholder="Dhan / Cement / Steel / Kirana" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 font-semibold">
+                            
+                            <div class="flex flex-wrap gap-1 pt-0.5">
+                                <button type="button" onclick="setMaterialPreset('Dhan / Rice Bags')" class="bg-slate-800 hover:bg-amber-600 text-slate-200 hover:text-white text-[10px] px-2 py-0.5 rounded-md border border-slate-700">🌾 Dhan/Chawal</button>
+                                <button type="button" onclick="setMaterialPreset('Cement & Sariya')" class="bg-slate-800 hover:bg-amber-600 text-slate-200 hover:text-white text-[10px] px-2 py-0.5 rounded-md border border-slate-700">🏗️ Cement/Sariya</button>
+                                <button type="button" onclick="setMaterialPreset('Steel & Heavy Metal')" class="bg-slate-800 hover:bg-amber-600 text-slate-200 hover:text-white text-[10px] px-2 py-0.5 rounded-md border border-slate-700">⚙️ Iron/Steel</button>
+                                <button type="button" onclick="setMaterialPreset('Gitti & Ret Crusher')" class="bg-slate-800 hover:bg-amber-600 text-slate-200 hover:text-white text-[10px] px-2 py-0.5 rounded-md border border-slate-700">🪨 Gitti/Ret</button>
+                                <button type="button" onclick="setMaterialPreset('Imli, Mahua & Forest Produce')" class="bg-slate-800 hover:bg-amber-600 text-slate-200 hover:text-white text-[10px] px-2 py-0.5 rounded-md border border-slate-700">🍃 Imli/Mahua</button>
+                            </div>
+                        </div>
+
+                        <!-- Truck Type & Weight -->
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Truck Type*</label>
+                                <select id="post-truck-type" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 font-semibold">
+                                    <option value="10-Chakka">10-Chakka (16-18T)</option>
+                                    <option value="12-Chakka">12-Chakka (21-25T)</option>
+                                    <option value="14-Chakka">14-Chakka (30T)</option>
+                                    <option value="6-Chakka / Eicher">6-Chakka / Eicher</option>
+                                    <option value="Pickup / Bolero">Pickup / Bolero</option>
+                                    <option value="Container">32ft Container</option>
+                                    <option value="Flatbed Trailer">Flatbed Trailer</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1">Weight (Tons)*</label>
+                                <input type="number" id="post-weight" step="0.1" required placeholder="18" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500 font-semibold">
+                            </div>
+                        </div>
+
+                        <!-- Financials (Freight & Commission) -->
+                        <div class="grid grid-cols-2 gap-2 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-300 mb-1">Total Freight (₹)*</label>
+                                <input type="number" id="post-freight" required placeholder="24500" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white font-black focus:outline-none focus:border-emerald-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-amber-400 mb-1">Brokerage Fee (₹)*</label>
+                                <input type="number" id="post-commission" required placeholder="1000" value="1000" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-emerald-400 font-black focus:outline-none focus:border-emerald-500">
+                            </div>
+                        </div>
+
+                        <!-- Trader Contact -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Trader / Mandi Contact Mobile*</label>
+                            <input type="tel" id="post-trader-mobile" required placeholder="9876543210" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-emerald-500">
+                        </div>
+
+                        <button type="submit" class="w-full bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2 mt-2">
+                            <i class="fa-solid fa-paper-plane"></i> Publish Live Load (Jagdalpur Desk)
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- TAB 3: KHALI TRUCKS VIEW -->
+            <section id="view-trucks" class="space-y-3 hidden">
+                <div class="flex items-center justify-between bg-slate-800/80 p-3 rounded-2xl border border-slate-700/80">
+                    <div>
+                        <h2 class="font-black text-white text-sm">Bastar Khali Trucks</h2>
+                        <p class="text-[10px] text-emerald-400 font-semibold">Available for Immediate Load</p>
+                    </div>
+                    <button onclick="toggleTruckModal()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs px-3 py-2 rounded-xl shadow flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-truck-medical"></i> + Add Truck
+                    </button>
+                </div>
+
+                <!-- Empty Trucks List Container -->
+                <div id="trucks-list-container" class="space-y-3">
+                    <!-- Injected dynamically via JS -->
+                </div>
+            </section>
+
+            <!-- TAB 4: HISAB & UPI COMMISSION DESK -->
+            <section id="view-payment" class="space-y-4 hidden">
+                
+                <!-- Earnings & Closed Deals Summary Ledger -->
+                <div class="glass-card p-4 rounded-2xl border border-slate-800">
+                    <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-800">
+                        <h3 class="font-black text-white text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-cash-register text-amber-400"></i> Commission Ledger
+                        </h3>
+                        <button onclick="resetDemoData()" class="text-[10px] text-slate-400 hover:text-amber-400 underline">Reset Demo Data</button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 text-center">
+                            <span class="text-[10px] text-slate-400 font-semibold uppercase block">Total Deals Closed</span>
+                            <span id="ledger-deals-count" class="text-lg font-black text-amber-400">0</span>
+                        </div>
+                        <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 text-center">
+                            <span class="text-[10px] text-slate-400 font-semibold uppercase block">Collected Income</span>
+                            <span id="ledger-total-income" class="text-lg font-black text-emerald-400">₹0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Digital Broker UPI Payment Desk -->
+                <div class="glass-card p-4 rounded-2xl border border-emerald-500/30 bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950/40">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold">
+                                <i class="fa-solid fa-qrcode"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-black text-white text-sm">UPI Commission Scanner</h3>
+                                <p class="text-[10px] text-emerald-400 font-bold">LoadMitra Jagdalpur Desk</p>
+                            </div>
+                        </div>
+                        <span class="bg-emerald-500/20 text-emerald-400 text-[9px] font-black px-2 py-0.5 rounded-full border border-emerald-500/30">Auto-QR</span>
+                    </div>
+
+                    <div class="mt-4 space-y-3">
+                        <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                            <span class="text-[10px] text-slate-400 uppercase font-semibold block mb-1">Official Broker UPI ID</span>
+                            <div class="flex items-center justify-between">
+                                <span id="desk-upi-id" class="font-mono font-bold text-amber-400 text-xs sm:text-sm">vishalnishad143143@okicici</span>
+                                <button onclick="copyToClipboard(getBrokerUPI(), 'UPI ID Copied Successfully!')" class="bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 text-xs px-2.5 py-1 rounded-lg border border-emerald-500/30 font-bold transition flex items-center gap-1">
+                                    <i class="fa-solid fa-copy"></i> Copy
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Amount Input & QR Trigger -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-300 mb-1">Enter Commission Amount (₹)</label>
+                            <div class="flex gap-2">
+                                <input type="number" id="qr-custom-amount" value="1000" placeholder="1000" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-xs text-amber-400 font-black focus:outline-none focus:border-amber-500">
+                                <button onclick="generateDeskQR()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs px-4 rounded-xl shadow transition whitespace-nowrap">
+                                    Generate QR
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- QR Code Container -->
+                        <div class="bg-white p-4 rounded-2xl flex flex-col items-center justify-center shadow-xl border border-slate-700">
+                            <div id="desk-qrcode-wrapper" class="flex justify-center items-center"></div>
+                            <p id="desk-qr-amount-label" class="text-xs font-black text-slate-900 mt-2">Scan & Pay ₹1,000 via Any UPI App</p>
+                            <span class="text-[10px] text-slate-500 font-medium">GPay • PhonePe • Paytm • BHIM UPI</span>
+                        </div>
+
+                        <!-- Direct UPI Payment Trigger Button -->
+                        <button onclick="payViaUPIApp(document.getElementById('qr-custom-amount').value)" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-bolt text-lg"></i> Open UPI App & Pay Directly
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Broker Profile & Contact Settings Card -->
+                <div class="glass-card p-4 rounded-2xl border border-slate-800">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-black text-slate-200 text-xs uppercase tracking-wider">Broker Contact Settings</h4>
+                        <button onclick="resetSettingsToDefault()" class="text-[10px] text-amber-400 hover:underline">Reset Default</button>
+                    </div>
+                    <form onsubmit="saveCustomSettings(event)" class="space-y-3">
+                        <div>
+                            <label class="block text-[11px] text-slate-400 font-semibold mb-1">Broker Mobile & WhatsApp</label>
+                            <input type="tel" id="set-mobile" value="8601129427" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white font-semibold">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-slate-400 font-semibold mb-1">Broker Commission UPI ID</label>
+                            <input type="text" id="set-upi" value="vishalnishad143143@okicici" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white font-semibold">
+                        </div>
+                        <button type="submit" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-black py-2.5 rounded-xl border border-slate-700 transition">
+                            Save Updated Broker Info
+                        </button>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- REGISTER EMPTY TRUCK MODAL -->
+    <div id="truck-modal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-2xl p-4 shadow-2xl relative">
+            <button onclick="toggleTruckModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="flex items-center gap-2 mb-3 pb-2 border-b border-slate-800">
+                <i class="fa-solid fa-truck-front text-amber-400 text-base"></i>
+                <h3 class="font-black text-white text-sm">Add Empty Truck (Jagdalpur / Bastar)</h3>
+            </div>
+            <form onsubmit="handlePostTruck(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Truck Number*</label>
+                    <input type="text" id="truck-no" required placeholder="CG 17 AB 1234" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white uppercase font-black">
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Truck Type*</label>
+                        <select id="truck-type" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white font-semibold">
+                            <option value="10-Chakka">10-Chakka</option>
+                            <option value="12-Chakka">12-Chakka</option>
+                            <option value="14-Chakka">14-Chakka</option>
+                            <option value="6-Chakka / Eicher">6-Chakka</option>
+                            <option value="Pickup / Bolero">Pickup / Bolero</option>
+                            <option value="Flatbed Trailer">Trailer</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Current Location*</label>
+                        <input type="text" id="truck-curr-city" required placeholder="Nagarnar / Mandi" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white font-semibold">
+                    </div>
+                </div>
+
+                <!-- One-Tap Location Chips for Truck Modal -->
+                <div>
+                    <span class="text-[10px] text-slate-400 font-semibold block mb-1">Quick Location Chips:</span>
+                    <div class="flex flex-wrap gap-1">
+                        <button type="button" onclick="document.getElementById('truck-curr-city').value='Jagdalpur'" class="bg-slate-800 hover:bg-amber-600 text-slate-200 text-[10px] px-2 py-0.5 rounded border border-slate-700">Jagdalpur</button>
+                        <button type="button" onclick="document.getElementById('truck-curr-city').value='Nagarnar (NMDC)'" class="bg-slate-800 hover:bg-amber-600 text-slate-200 text-[10px] px-2 py-0.5 rounded border border-slate-700">Nagarnar</button>
+                        <button type="button" onclick="document.getElementById('truck-curr-city').value='Pandripani Mandi'" class="bg-slate-800 hover:bg-amber-600 text-slate-200 text-[10px] px-2 py-0.5 rounded border border-slate-700">Pandripani</button>
+                        <button type="button" onclick="document.getElementById('truck-curr-city').value='Raipur'" class="bg-slate-800 hover:bg-amber-600 text-slate-200 text-[10px] px-2 py-0.5 rounded border border-slate-700">Raipur</button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Preferred Return Route*</label>
+                    <input type="text" id="truck-route" required placeholder="Raipur to Jagdalpur / Anywhere" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white font-semibold">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Owner / Driver Mobile*</label>
+                    <input type="tel" id="truck-mobile" required placeholder="9876543210" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-xs text-white">
+                </div>
+
+                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-2.5 rounded-xl shadow-lg transition mt-2">
+                    Submit Empty Vehicle
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- BOOKING & COMMISSION PAYMENT MODAL -->
+    <div id="commission-modal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 w-full max-w-sm rounded-2xl p-4 shadow-2xl relative">
+            <button onclick="closeCommissionModal()" class="absolute top-3 right-3 text-slate-400 hover:text-white p-1">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            
+            <div class="text-center mb-3">
+                <span class="bg-amber-500/20 text-amber-400 text-[10px] font-black px-2 py-0.5 rounded-full border border-amber-500/30 inline-block mb-1">Brokerage Fee Desk</span>
+                <h3 class="font-black text-white text-base">Pay Commission to Book Load</h3>
+                <p id="modal-route-subtitle" class="text-xs text-slate-400 font-medium">Route Details</p>
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-center mb-3">
+                <span class="text-[10px] text-slate-400 uppercase font-semibold block">Commission Amount</span>
+                <span id="modal-comm-amount" class="text-2xl font-black text-emerald-400">₹1,000</span>
+            </div>
+
+            <!-- Modal Dynamic QR Code Wrapper -->
+            <div class="bg-white p-3 rounded-2xl flex flex-col items-center justify-center shadow-lg mb-3">
+                <div id="modal-qrcode-wrapper" class="flex justify-center items-center"></div>
+                <p class="text-[10px] font-bold text-slate-800 mt-2">Scan with GPay / PhonePe / Paytm</p>
+            </div>
+
+            <!-- Active UPI ID Display -->
+            <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between mb-3">
+                <div class="truncate mr-2">
+                    <span class="text-[9px] text-slate-400 block uppercase font-bold">UPI ID</span>
+                    <span id="modal-upi-id-str" class="text-xs font-mono font-bold text-amber-400">vishalnishad143143@okicici</span>
+                </div>
+                <button onclick="copyToClipboard(getBrokerUPI(), 'UPI ID Copied!')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-2.5 py-1.5 rounded-lg border border-slate-700 font-bold transition whitespace-nowrap">
+                    <i class="fa-solid fa-copy"></i> Copy
+                </button>
+            </div>
+
+            <div class="space-y-2">
+                <button id="modal-pay-upi-btn" onclick="" class="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 text-white font-black py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-bolt text-lg"></i> Pay via UPI App
+                </button>
+                <button id="modal-mark-paid-btn" onclick="" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 rounded-xl border border-slate-700 transition text-xs">
+                    Mark Load Completed (Paid)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STICKY BOTTOM NAVIGATION TABS -->
+    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-slate-900/95 backdrop-blur border-t border-slate-800 grid grid-cols-4 z-40">
+        <button onclick="switchTab('loads')" id="tab-loads" class="tab-btn tab-active py-2 flex flex-col items-center justify-center transition">
+            <i class="fa-solid fa-boxes-stacked text-base mb-0.5"></i>
+            <span class="text-[10px] font-bold">Live Loads</span>
+        </button>
+        <button onclick="switchTab('post')" id="tab-post" class="tab-btn text-slate-400 py-2 flex flex-col items-center justify-center transition">
+            <i class="fa-solid fa-circle-plus text-base mb-0.5"></i>
+            <span class="text-[10px] font-bold">Post Load</span>
+        </button>
+        <button onclick="switchTab('trucks')" id="tab-trucks" class="tab-btn text-slate-400 py-2 flex flex-col items-center justify-center transition">
+            <i class="fa-solid fa-truck text-base mb-0.5"></i>
+            <span class="text-[10px] font-bold">Khali Trucks</span>
+        </button>
+        <button onclick="switchTab('payment')" id="tab-payment" class="tab-btn text-slate-400 py-2 flex flex-col items-center justify-center transition relative">
+            <i class="fa-solid fa-wallet text-base mb-0.5"></i>
+            <span class="text-[10px] font-bold">Hisab & UPI</span>
+            <span class="absolute top-1 right-3 w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+        </button>
+    </nav>
+
+    <!-- JAVASCRIPT APPLICATION LOGIC -->
+    <script>
+        // DEFAULT BROKER DETAILS FOR JAGDALPUR
+        const DEFAULT_MOBILE = "8601129427";
+        const DEFAULT_UPI = "vishalnishad143143@okicici";
+
+        // PRE-LOADED JAGDALPUR / BASTAR SAMPLE LOADS
+        const BASTAR_SAMPLE_LOADS = [
+            {
+                id: 'LOAD-JGD-101',
+                pickup: 'Pandripani Mandi, Jagdalpur',
+                drop: 'Raipur (Bhanpuri)',
+                material: 'Dhan / Rice Bags',
+                weight: '18 Tons',
+                truckType: '10-Chakka',
+                freight: 24500,
+                commission: 1000,
+                traderMobile: '9826112345',
+                status: 'Available',
+                postedAt: '15 mins ago'
+            },
+            {
+                id: 'LOAD-JGD-102',
+                pickup: 'Nagarnar Steel Plant, Jagdalpur',
+                drop: 'Bhilai Industrial Area',
+                material: 'Steel / Industrial Scrap',
+                weight: '25 Tons',
+                truckType: '12-Chakka',
+                freight: 32000,
+                commission: 1500,
+                traderMobile: '9425298765',
+                status: 'Available',
+                postedAt: '35 mins ago'
+            },
+            {
+                id: 'LOAD-JGD-103',
+                pickup: 'Raipur (Urla)',
+                drop: 'Jagdalpur (Geedam Rd)',
+                material: 'Cement & Sariya (Return Load)',
+                weight: '16 Tons',
+                truckType: '10-Chakka',
+                freight: 22000,
+                commission: 1000,
+                traderMobile: '9179054321',
+                status: 'Available',
+                postedAt: '1 hour ago'
+            },
+            {
+                id: 'LOAD-JGD-104',
+                pickup: 'Jagdalpur (Asna Bypass)',
+                drop: 'Kirandul / Bacheli',
+                material: 'Hardware & Construction Material',
+                weight: '9 Tons',
+                truckType: '6-Chakka / Eicher',
+                freight: 11500,
+                commission: 600,
+                traderMobile: '9755512389',
+                status: 'Available',
+                postedAt: '2 hours ago'
+            }
+        ];
+
+        // PRE-LOADED JAGDALPUR / BASTAR EMPTY TRUCKS
+        const BASTAR_SAMPLE_TRUCKS = [
+            {
+                id: 'TRK-JGD-201',
+                truckNo: 'CG 17 KL 4821',
+                truckType: '10-Chakka',
+                location: 'Raipur Transport Nagar',
+                route: 'Raipur ➔ Jagdalpur (Return Load)',
+                mobile: '9826198765',
+                postedAt: '20 mins ago'
+            },
+            {
+                id: 'TRK-JGD-202',
+                truckNo: 'CG 17 H 9034',
+                truckType: '12-Chakka',
+                location: 'Nagarnar, Jagdalpur',
+                route: 'Nagarnar ➔ Bhilai / Raipur / Any Route',
+                mobile: '9425212345',
+                postedAt: '45 mins ago'
+            },
+            {
+                id: 'TRK-JGD-203',
+                truckNo: 'CG 04 JD 7112',
+                truckType: 'Pickup / Bolero',
+                location: 'Jagdalpur (Frezerpur)',
+                route: 'Jagdalpur ➔ Kondagaon / Dantewada',
+                mobile: '9755543210',
+                postedAt: '2 hours ago'
+            }
+        ];
+
+        // STATE MANAGERS
+        let loads = [];
+        let emptyTrucks = [];
+        let activeFilter = 'all';
+        let deskQrObject = null;
+        let modalQrObject = null;
+
+        // INITIALIZE APP ON LOAD
+        window.addEventListener('DOMContentLoaded', () => {
+            initStorage();
+            updateBrokerContacts();
+            renderLoads();
+            renderTrucks();
+            updateKPIs();
+            generateDeskQR();
+        });
+
+        // LOCALSTORAGE SETUP
+        function initStorage() {
+            if (!localStorage.getItem('loadmitra_bastar_loads')) {
+                localStorage.setItem('loadmitra_bastar_loads', JSON.stringify(BASTAR_SAMPLE_LOADS));
+            }
+            if (!localStorage.getItem('loadmitra_bastar_trucks')) {
+                localStorage.setItem('loadmitra_bastar_trucks', JSON.stringify(BASTAR_SAMPLE_TRUCKS));
+            }
+            if (!localStorage.getItem('loadmitra_bastar_settings')) {
+                localStorage.setItem('loadmitra_bastar_settings', JSON.stringify({
+                    mobile: DEFAULT_MOBILE,
+                    upi: DEFAULT_UPI
+                }));
+            }
+            loads = JSON.parse(localStorage.getItem('loadmitra_bastar_loads'));
+            emptyTrucks = JSON.parse(localStorage.getItem('loadmitra_bastar_trucks'));
+        }
+
+        function resetDemoData() {
+            localStorage.setItem('loadmitra_bastar_loads', JSON.stringify(BASTAR_SAMPLE_LOADS));
+            localStorage.setItem('loadmitra_bastar_trucks', JSON.stringify(BASTAR_SAMPLE_TRUCKS));
+            loads = JSON.parse(localStorage.getItem('loadmitra_bastar_loads'));
+            emptyTrucks = JSON.parse(localStorage.getItem('loadmitra_bastar_trucks'));
+            renderLoads();
+            renderTrucks();
+            updateKPIs();
+            showToast("Bastar Demo Data Reset Successfully!");
+        }
+
+        // BROKER CREDENTIAL GETTERS
+        function getBrokerMobile() {
+            const settings = JSON.parse(localStorage.getItem('loadmitra_bastar_settings') || '{}');
+            return settings.mobile || DEFAULT_MOBILE;
+        }
+
+        function getBrokerUPI() {
+            const settings = JSON.parse(localStorage.getItem('loadmitra_bastar_settings') || '{}');
+            return settings.upi || DEFAULT_UPI;
+        }
+
+        // UPDATE UI DOM CONTACTS
+        function updateBrokerContacts() {
+            const mobile = getBrokerMobile();
+            const upi = getBrokerUPI();
+
+            document.getElementById('hdr-call-btn').href = `tel:+91${mobile}`;
+            document.getElementById('hdr-wa-btn').href = `https://wa.me/91${mobile}?text=Namaste%20LoadMitra%20Jagdalpur!%20Mujhe%20load%20ya%20truck%20ki%20jaankari%20chahiye.`;
+
+            document.getElementById('desk-upi-id').innerText = upi;
+            document.getElementById('set-mobile').value = mobile;
+            document.getElementById('set-upi').value = upi;
+        }
+
+        // SAVE CUSTOM BROKER SETTINGS
+        function saveCustomSettings(e) {
+            e.preventDefault();
+            const newMobile = document.getElementById('set-mobile').value.trim();
+            const newUPI = document.getElementById('set-upi').value.trim();
+
+            if (!newMobile || !newUPI) {
+                showToast("Kripya mobile aur UPI ID dono bharein!");
+                return;
+            }
+
+            localStorage.setItem('loadmitra_bastar_settings', JSON.stringify({
+                mobile: newMobile,
+                upi: newUPI
+            }));
+
+            updateBrokerContacts();
+            generateDeskQR();
+            showToast("Broker Settings Updated Successfully!");
+        }
+
+        function resetSettingsToDefault() {
+            localStorage.setItem('loadmitra_bastar_settings', JSON.stringify({
+                mobile: DEFAULT_MOBILE,
+                upi: DEFAULT_UPI
+            }));
+            updateBrokerContacts();
+            generateDeskQR();
+            showToast("Reset to Default Phone & UPI ID!");
+        }
+
+        // TAB NAVIGATION
+        function switchTab(tabName) {
+            const views = ['loads', 'post', 'trucks', 'payment'];
+            views.forEach(v => {
+                document.getElementById(`view-${v}`).classList.add('hidden');
+                document.getElementById(`tab-${v}`).classList.remove('tab-active');
+                document.getElementById(`tab-${v}`).classList.add('text-slate-400');
+            });
+
+            document.getElementById(`view-${tabName}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabName}`);
+            activeBtn.classList.add('tab-active');
+            activeBtn.classList.remove('text-slate-400');
+
+            if (tabName === 'payment') {
+                generateDeskQR();
+            }
+        }
+
+        // ROUTE HELPER CHIPS & SWAPPER
+        function applyRouteChip(pickupId, dropId, fromVal, toVal) {
+            document.getElementById(pickupId).value = fromVal;
+            document.getElementById(dropId).value = toVal;
+            showToast(`Route Set: ${fromVal} ➔ ${toVal}`);
+        }
+
+        function swapRouteFields(pickupId, dropId) {
+            const p = document.getElementById(pickupId);
+            const d = document.getElementById(dropId);
+            const temp = p.value;
+            p.value = d.value;
+            d.value = temp;
+        }
+
+        function setMaterialPreset(val) {
+            document.getElementById('post-material').value = val;
+        }
+
+        // RENDER LOADS BOARD
+        function renderLoads() {
+            const container = document.getElementById('loads-list-container');
+            const searchQuery = document.getElementById('load-search-input').value.toLowerCase().trim();
+            container.innerHTML = '';
+
+            const filtered = loads.filter(l => {
+                // Search filter
+                const matchesSearch = l.pickup.toLowerCase().includes(searchQuery) || 
+                                      l.drop.toLowerCase().includes(searchQuery) ||
+                                      l.material.toLowerCase().includes(searchQuery) ||
+                                      l.truckType.toLowerCase().includes(searchQuery);
+
+                if (!matchesSearch) return false;
+
+                // Tab Pills filter
+                if (activeFilter === 'all') return true;
+                if (activeFilter === 'return') return l.material.toLowerCase().includes('return') || l.pickup.toLowerCase().includes('raipur');
+                if (activeFilter === 'from-jagdalpur') return l.pickup.toLowerCase().includes('jagdalpur') || l.pickup.toLowerCase().includes('nagarnar') || l.pickup.toLowerCase().includes('pandripani');
+                if (activeFilter === 'to-jagdalpur') return l.drop.toLowerCase().includes('jagdalpur');
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="glass-card p-6 text-center rounded-2xl border border-slate-800 space-y-2">
+                        <i class="fa-solid fa-truck-ramp-box text-3xl text-slate-600"></i>
+                        <p class="text-xs font-bold text-slate-300">Is Route Par Koi Active Load Nahi Hai</p>
+                        <p class="text-[11px] text-slate-500">Naya load add karne ke liye 'Post Load' tab par jayein.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(load => {
+                const isDone = load.status === 'Done';
+                const card = document.createElement('div');
+                card.className = `glass-card p-4 rounded-2xl border ${isDone ? 'border-slate-800 opacity-60' : 'border-slate-800 hover:border-emerald-500/40'} transition relative overflow-hidden`;
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-800">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-amber-500/20 text-amber-400 font-black text-[10px] px-2 py-0.5 rounded border border-amber-500/30 uppercase">
+                                ${load.truckType}
+                            </span>
+                            <span class="text-xs font-bold text-slate-200">${load.material} (${load.weight})</span>
+                        </div>
+                        <span class="text-[10px] text-slate-400 font-medium"><i class="fa-regular fa-clock"></i> ${load.postedAt}</span>
+                    </div>
+
+                    <!-- Route Display -->
+                    <div class="flex items-center justify-between my-2">
+                        <div class="flex-1">
+                            <span class="text-[9px] text-slate-400 uppercase font-semibold block">PICKUP (कहाँ से)</span>
+                            <h4 class="font-extrabold text-white text-xs sm:text-sm leading-snug">${load.pickup}</h4>
+                        </div>
+                        <div class="px-2 text-center">
+                            <i class="fa-solid fa-arrow-right-long text-emerald-400 text-base"></i>
+                        </div>
+                        <div class="flex-1 text-right">
+                            <span class="text-[9px] text-slate-400 uppercase font-semibold block">DROP (कहाँ तक)</span>
+                            <h4 class="font-extrabold text-white text-xs sm:text-sm leading-snug">${load.drop}</h4>
+                        </div>
+                    </div>
+
+                    <!-- Commercial Strip -->
+                    <div class="grid grid-cols-2 gap-2 bg-slate-950/80 p-2.5 rounded-xl border border-slate-800 my-3">
+                        <div>
+                            <span class="text-[9px] text-slate-400 block font-semibold uppercase">Total Freight (भाड़ा)</span>
+                            <span class="font-black text-white text-sm sm:text-base">₹${Number(load.freight).toLocaleString('en-IN')}</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[9px] text-slate-400 block font-semibold uppercase">Brokerage (कमीशन)</span>
+                            <span class="font-black text-emerald-400 text-sm sm:text-base">₹${Number(load.commission).toLocaleString('en-IN')}</span>
+                        </div>
+                    </div>
+
+                    <!-- Card Action Buttons -->
+                    ${isDone ? `
+                        <div class="bg-slate-800/80 text-slate-400 text-center py-2 rounded-xl text-xs font-bold border border-slate-700">
+                            <i class="fa-solid fa-circle-check text-emerald-400"></i> Booked & Commission Recorded
+                        </div>
+                    ` : `
+                        <div class="grid grid-cols-3 gap-1.5">
+                            <button onclick="shareOnWhatsApp('${load.id}')" class="bg-green-600/20 hover:bg-green-600/30 text-green-400 border border-green-500/30 font-bold py-2 rounded-xl text-[11px] flex items-center justify-center gap-1 transition">
+                                <i class="fa-brands fa-whatsapp text-sm"></i> Share WA
+                            </button>
+                            <button onclick="openCommissionModal(${load.commission}, '${load.pickup} ➔ ${load.drop}', '${load.id}')" class="bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-black py-2 rounded-xl text-[11px] shadow transition flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-bolt"></i> Pay & Book
+                            </button>
+                            <button onclick="markLoadDone('${load.id}')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 rounded-xl text-[11px] border border-slate-700 transition flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-check"></i> Done
+                            </button>
+                        </div>
+                    `}
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterLoads(type, btnElement) {
+            activeFilter = type;
+            document.querySelectorAll('.load-filter-pill').forEach(btn => {
+                btn.classList.remove('chip-selected', 'bg-emerald-600', 'text-white');
+                btn.classList.add('bg-slate-800', 'text-slate-300');
+            });
+            btnElement.classList.remove('bg-slate-800', 'text-slate-300');
+            btnElement.classList.add('chip-selected', 'bg-emerald-600', 'text-white');
+            renderLoads();
+        }
+
+        // HANDLE NEW LOAD POSTING
+        function handlePostLoad(e) {
+            e.preventDefault();
+            const pickup = document.getElementById('post-pickup').value.trim();
+            const drop = document.getElementById('post-drop').value.trim();
+            const material = document.getElementById('post-material').value.trim();
+            const weight = document.getElementById('post-weight').value.trim() + ' Tons';
+            const truckType = document.getElementById('post-truck-type').value;
+            const freight = parseFloat(document.getElementById('post-freight').value);
+            const commission = parseFloat(document.getElementById('post-commission').value);
+            const traderMobile = document.getElementById('post-trader-mobile').value.trim();
+
+            const newLoad = {
+                id: 'LOAD-JGD-' + Math.floor(1000 + Math.random() * 9000),
+                pickup,
+                drop,
+                material,
+                weight,
+                truckType,
+                freight,
+                commission,
+                traderMobile,
+                status: 'Available',
+                postedAt: 'Just now'
+            };
+
+            loads.unshift(newLoad);
+            localStorage.setItem('loadmitra_bastar_loads', JSON.stringify(loads));
+
+            document.getElementById('post-load-form').reset();
+            document.getElementById('post-commission').value = "1000";
+            showToast("Jagdalpur Live Load Published!");
+            updateKPIs();
+            switchTab('loads');
+            renderLoads();
+        }
+
+        // RENDER EMPTY TRUCKS
+        function renderTrucks() {
+            const container = document.getElementById('trucks-list-container');
+            container.innerHTML = '';
+
+            if (emptyTrucks.length === 0) {
+                container.innerHTML = `
+                    <div class="glass-card p-6 text-center rounded-2xl border border-slate-800">
+                        <i class="fa-solid fa-truck text-3xl text-slate-600 mb-2"></i>
+                        <p class="text-xs font-bold text-slate-300">Koi Khali Gaadi Registered Nahi Hai</p>
+                    </div>
+                `;
+                return;
+            }
+
+            emptyTrucks.forEach(t => {
+                const card = document.createElement('div');
+                card.className = "glass-card p-4 rounded-2xl border border-slate-800 space-y-2";
+                card.innerHTML = `
+                    <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-emerald-500/20 text-emerald-400 font-black text-xs px-2 py-0.5 rounded border border-emerald-500/30">
+                                ${t.truckNo}
+                            </span>
+                            <span class="text-xs font-bold text-slate-200">${t.truckType}</span>
+                        </div>
+                        <span class="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-1.5 py-0.5 rounded"><i class="fa-solid fa-shield-check"></i> Verified RC</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div>
+                            <span class="text-[9px] text-slate-400 block font-semibold">CURRENT LOCATION</span>
+                            <span class="font-bold text-white"><i class="fa-solid fa-location-dot text-amber-400"></i> ${t.location}</span>
+                        </div>
+                        <div>
+                            <span class="text-[9px] text-slate-400 block font-semibold">PREFERRED RETURN</span>
+                            <span class="font-bold text-emerald-400">${t.route}</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800">
+                        <a href="tel:+91${t.mobile}" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2 rounded-xl text-xs border border-slate-700 flex items-center justify-center gap-1 transition">
+                            <i class="fa-solid fa-phone text-emerald-400"></i> Call Owner
+                        </a>
+                        <a href="https://wa.me/91${t.mobile}?text=Namaste!%20LoadMitra%20Jagdalpur%20se%20aapki%20gaadi%20${t.truckNo}%20ke%20liye%20load%20available%20hai." target="_blank" class="bg-green-600 hover:bg-green-500 text-white font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1 shadow transition">
+                            <i class="fa-brands fa-whatsapp text-base"></i> Send Load
+                        </a>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function toggleTruckModal() {
+            document.getElementById('truck-modal').classList.toggle('hidden');
+        }
+
+        function handlePostTruck(e) {
+            e.preventDefault();
+            const truckNo = document.getElementById('truck-no').value.trim().toUpperCase();
+            const truckType = document.getElementById('truck-type').value;
+            const location = document.getElementById('truck-curr-city').value.trim();
+            const route = document.getElementById('truck-route').value.trim();
+            const mobile = document.getElementById('truck-mobile').value.trim();
+
+            const newTruck = {
+                id: 'TRK-JGD-' + Math.floor(1000 + Math.random() * 9000),
+                truckNo,
+                truckType,
+                location,
+                route,
+                mobile,
+                postedAt: 'Just now'
+            };
+
+            emptyTrucks.unshift(newTruck);
+            localStorage.setItem('loadmitra_bastar_trucks', JSON.stringify(emptyTrucks));
+
+            toggleTruckModal();
+            showToast("Khali Gaadi Jagdalpur Directory Mein Add Ho Gayi!");
+            updateKPIs();
+            renderTrucks();
+        }
+
+        // WHATSAPP SHARE FORMATTER
+        function shareOnWhatsApp(loadId) {
+            const load = loads.find(l => l.id === loadId);
+            if (!load) return;
+
+            const brokerMobile = getBrokerMobile();
+            const brokerUPI = getBrokerUPI();
+
+            const text = `🚨 *JAGDALPUR & BASTAR URGENT LOAD ALERT* 🚨\n\n` +
+                `📍 *Route:* ${load.pickup} ➔ ${load.drop}\n` +
+                `📦 *Material:* ${load.material} (${load.weight})\n` +
+                `🚛 *Truck Required:* ${load.truckType}\n` +
+                `💰 *Total Freight (भाड़ा):* ₹${Number(load.freight).toLocaleString('en-IN')}\n` +
+                `🤝 *Brokerage Fee:* ₹${load.commission}\n\n` +
+                `📞 *LoadMitra Jagdalpur Desk:* ${brokerMobile}\n` +
+                `💳 *Commission UPI:* ${brokerUPI}\n\n` +
+                `⚡ Gaadi book karne ke liye turant WhatsApp/Call karein!`;
+
+            const encoded = encodeURIComponent(text);
+            window.open(`https://wa.me/?text=${encoded}`, '_blank');
+        }
+
+        // INTERACTIVE UPI MODAL HANDLERS
+        function openCommissionModal(amount, routeName, loadId = null) {
+            const upi = getBrokerUPI();
+            const modal = document.getElementById('commission-modal');
+            
+            document.getElementById('modal-route-subtitle').innerText = routeName || 'Brokerage Payment';
+            document.getElementById('modal-comm-amount').innerText = `₹${Number(amount).toLocaleString('en-IN')}`;
+            document.getElementById('modal-upi-id-str').innerText = upi;
+
+            const upiString = `upi://pay?pa=${upi}&pn=LoadMitra%20Jagdalpur&am=${amount}&cu=INR&tn=Brokerage%20${encodeURIComponent(routeName)}`;
+            const qrWrapper = document.getElementById('modal-qrcode-wrapper');
+            qrWrapper.innerHTML = '';
+            
+            modalQrObject = new QRCode(qrWrapper, {
+                text: upiString,
+                width: 140,
+                height: 140,
+                colorDark: "#0f172a",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            const payBtn = document.getElementById('modal-pay-upi-btn');
+            payBtn.onclick = () => payViaUPIApp(amount, routeName);
+
+            const markPaidBtn = document.getElementById('modal-mark-paid-btn');
+            if (loadId) {
+                markPaidBtn.style.display = 'block';
+                markPaidBtn.onclick = () => {
+                    markLoadDone(loadId);
+                    closeCommissionModal();
+                };
+            } else {
+                markPaidBtn.style.display = 'none';
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeCommissionModal() {
+            document.getElementById('commission-modal').classList.add('hidden');
+        }
+
+        // GENERATE BROKER DESK QR
+        function generateDeskQR() {
+            const amountInput = document.getElementById('qr-custom-amount');
+            const amount = amountInput.value || 1000;
+            const upi = getBrokerUPI();
+
+            document.getElementById('desk-qr-amount-label').innerText = `Scan & Pay ₹${Number(amount).toLocaleString('en-IN')} via Any UPI App`;
+
+            const upiString = `upi://pay?pa=${upi}&pn=LoadMitra%20Jagdalpur&am=${amount}&cu=INR&tn=LoadMitra%20Commission`;
+            const qrWrapper = document.getElementById('desk-qrcode-wrapper');
+            qrWrapper.innerHTML = '';
+
+            deskQrObject = new QRCode(qrWrapper, {
+                text: upiString,
+                width: 150,
+                height: 150,
+                colorDark: "#0f172a",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        // TRIGGER NATIVE UPI APPS
+        function payViaUPIApp(amount, memo = "Brokerage Payment") {
+            const upi = getBrokerUPI();
+            const upiUrl = `upi://pay?pa=${upi}&pn=LoadMitra%20Jagdalpur&am=${amount}&cu=INR&tn=${encodeURIComponent(memo)}`;
+            window.location.href = upiUrl;
+        }
+
+        // MARK LOAD AS COMPLETED
+        function markLoadDone(loadId) {
+            const index = loads.findIndex(l => l.id === loadId);
+            if (index !== -1) {
+                loads[index].status = 'Done';
+                localStorage.setItem('loadmitra_bastar_loads', JSON.stringify(loads));
+                renderLoads();
+                updateKPIs();
+                showToast("Load Marked Completed & Commission Added to Ledger!");
+            }
+        }
+
+        // UPDATE KPI & LEDGER STATS
+        function updateKPIs() {
+            const activeLoads = loads.filter(l => l.status === 'Available').length;
+            const completedLoads = loads.filter(l => l.status === 'Done');
+            const totalEarned = completedLoads.reduce((sum, l) => sum + Number(l.commission), 0);
+
+            document.getElementById('kpi-loads-count').innerText = activeLoads;
+            document.getElementById('kpi-trucks-count').innerText = emptyTrucks.length;
+            document.getElementById('kpi-earned-sum').innerText = `₹${totalEarned.toLocaleString('en-IN')}`;
+
+            document.getElementById('ledger-deals-count').innerText = completedLoads.length;
+            document.getElementById('ledger-total-income').innerText = `₹${totalEarned.toLocaleString('en-IN')}`;
+        }
+
+        // CLIPBOARD COPY
+        function copyToClipboard(text, successMsg = "Copied to Clipboard!") {
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast(successMsg);
+        }
+
+        // TOAST NOTIFIER
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const msgSpan = document.getElementById('toast-message').querySelector('span');
+            msgSpan.innerText = message;
+
+            toast.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-12');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                hideToast();
+            }, 3500);
+        }
+
+        function hideToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('opacity-100', 'translate-y-0');
+            toast.classList.add('opacity-0', 'pointer-events-none', '-translate-y-12');
+        }
+    </script>
+</body>
+</html>
